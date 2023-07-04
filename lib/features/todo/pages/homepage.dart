@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:task_managment_with_riverpod/common/utils/constants.dart';
 import 'package:task_managment_with_riverpod/common/widgets/appstyle.dart';
 import 'package:task_managment_with_riverpod/common/widgets/custom_text_field.dart';
+import 'package:task_managment_with_riverpod/common/widgets/expansion_tile.dart';
 import 'package:task_managment_with_riverpod/common/widgets/reusabletext.dart';
 import 'package:task_managment_with_riverpod/common/widgets/width_spacer.dart';
 
@@ -147,7 +148,12 @@ class _HomePageState extends ConsumerState<HomePage> with TickerProviderStateMix
                   )
                 ]),
               ),
-            )
+            ),
+            HeightSpacer(height: 20),
+            ExpansionTileWidget(text: "Tomorrow's Task", text2: "Day after tomorrow task", children: []),
+            HeightSpacer(height: 20),
+            ExpansionTileWidget(text: DateTime.now().add(Duration(days: 2)).toString().substring(5,10), text2: "Tomorrow's tasks are shown here", children: []),
+
           ],
         ),
       )),
