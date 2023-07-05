@@ -8,6 +8,7 @@ import 'package:task_managment_with_riverpod/common/widgets/custom_text_field.da
 import 'package:task_managment_with_riverpod/common/widgets/expansion_tile.dart';
 import 'package:task_managment_with_riverpod/common/widgets/reusabletext.dart';
 import 'package:task_managment_with_riverpod/common/widgets/width_spacer.dart';
+import 'package:task_managment_with_riverpod/features/todo/widgets/todo_tile.dart';
 
 import '../../../common/widgets/height_spacer.dart';
 
@@ -139,8 +140,22 @@ class _HomePageState extends ConsumerState<HomePage> with TickerProviderStateMix
                 borderRadius: BorderRadius.all(Radius.circular(AppConst.kRadius)),
                 child: TabBarView(controller: tabController, children: [
                   Container(
-                    color: AppConst.kYellow,
+                    color: AppConst.kBkLight,
                     height: AppConst.kHeight * 0.3,
+                    child: ListView(
+                      children: [
+                        TodoTile(
+                          start: "03:00",
+                          end: "05:00",
+                          switcher: Switch(
+                            value: true,
+                            onChanged: (value) {
+
+                            }, 
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                   Container(
                     color: AppConst.kBkLight,
@@ -152,8 +167,10 @@ class _HomePageState extends ConsumerState<HomePage> with TickerProviderStateMix
             HeightSpacer(height: 20),
             ExpansionTileWidget(text: "Tomorrow's Task", text2: "Day after tomorrow task", children: []),
             HeightSpacer(height: 20),
-            ExpansionTileWidget(text: DateTime.now().add(Duration(days: 2)).toString().substring(5,10), text2: "Tomorrow's tasks are shown here", children: []),
-
+            ExpansionTileWidget(
+                text: DateTime.now().add(Duration(days: 2)).toString().substring(5, 10),
+                text2: "Tomorrow's tasks are shown here",
+                children: []),
           ],
         ),
       )),
