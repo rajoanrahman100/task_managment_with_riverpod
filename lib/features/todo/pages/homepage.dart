@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:task_managment_with_riverpod/common/utils/constants.dart';
 import 'package:task_managment_with_riverpod/common/widgets/appstyle.dart';
 import 'package:task_managment_with_riverpod/common/widgets/custom_text_field.dart';
 import 'package:task_managment_with_riverpod/common/widgets/expansion_tile.dart';
 import 'package:task_managment_with_riverpod/common/widgets/reusabletext.dart';
 import 'package:task_managment_with_riverpod/common/widgets/width_spacer.dart';
+import 'package:task_managment_with_riverpod/features/todo/controller/expansion_provider.dart';
 import 'package:task_managment_with_riverpod/features/todo/widgets/todo_tile.dart';
 
 import '../../../common/widgets/height_spacer.dart';
@@ -149,9 +150,7 @@ class _HomePageState extends ConsumerState<HomePage> with TickerProviderStateMix
                           end: "05:00",
                           switcher: Switch(
                             value: true,
-                            onChanged: (value) {
-
-                            }, 
+                            onChanged: (value) {},
                           ),
                         )
                       ],
@@ -165,12 +164,64 @@ class _HomePageState extends ConsumerState<HomePage> with TickerProviderStateMix
               ),
             ),
             HeightSpacer(height: 20),
-            ExpansionTileWidget(text: "Tomorrow's Task", text2: "Day after tomorrow task", children: []),
+            ExpansionTileWidget(
+              text: "Tomorrow's Task",
+              text2: "Day after tomorrow task",
+              onExpansionChanged: (bool expanded) {
+                ref.read(expansionStateProvider.notifier).setStart(!expanded);
+              },
+              trailing: Padding(
+                padding: EdgeInsets.only(right: 12.w),
+                child: ref.watch(expansionStateProvider)
+                    ? Icon(
+                        AntDesign.circledown ,
+                        color: AppConst.kLight,
+                      )
+                    : Icon(
+                        AntDesign.closecircleo,
+                        color: AppConst.kBlueLight,
+                      ),
+              ),
+              children: [
+                TodoTile(
+                  start: "03:00",
+                  end: "05:00",
+                  switcher: Switch(
+                    value: true,
+                    onChanged: (value) {},
+                  ),
+                )
+              ],
+            ),
             HeightSpacer(height: 20),
             ExpansionTileWidget(
                 text: DateTime.now().add(Duration(days: 2)).toString().substring(5, 10),
                 text2: "Tomorrow's tasks are shown here",
-                children: []),
+                onExpansionChanged: (bool expanded) {
+                  ref.read(expansionState0Provider.notifier).setStart(!expanded);
+                },
+                trailing: Padding(
+                  padding: EdgeInsets.only(right: 12.w),
+                  child: ref.watch(expansionState0Provider)
+                      ? Icon(
+                    AntDesign.circledown ,
+                    color: AppConst.kLight,
+                  )
+                      : Icon(
+                    AntDesign.closecircleo,
+                    color: AppConst.kBlueLight,
+                  ),
+                ),
+              children: [
+                TodoTile(
+                  start: "03:00",
+                  end: "05:00",
+                  switcher: Switch(
+                    value: true,
+                    onChanged: (value) {},
+                  ),
+                )
+              ]),
           ],
         ),
       )),
