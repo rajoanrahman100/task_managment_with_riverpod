@@ -12,24 +12,47 @@ class TodoState extends _$TodoState{
   List<Task> build(){
     return [];
   }
-  void refresh()async{
+  Future <void> refresh()async{
     final data=await DBHelper.getItems();
     state=data.map((e) => Task.fromJson(e)).toList();
    // state=newState;
   }
 
-  void addItem(Task task)async{
+  Future <void> addItem(Task task)async{
     await DBHelper.createItem(task);
     refresh();
   }
 
-  void updateItem(int id, String title, String desc, int isCompleted, String date, String startTime, String endTime)async{
+  Future <void> updateTodo(int id, String title, String desc, int isCompleted, String date, String startTime, String endTime)async{
     await DBHelper.updateItem(id,title,desc,isCompleted,date,startTime,endTime);
     refresh();
   }
 
-  void deleteItem(int id)async{
+  Future <void> deleteTodo(int id)async{
     await DBHelper.deleteItem(id);
     refresh();
   }
+
+  Future <void> markAsComplete(int id, String title, String desc, int isCompleted, String date, String startTime, String endTime)async{
+    await DBHelper.updateItem(id,title,desc,1,date,startTime,endTime);
+    refresh();
+  }
+
+  //today
+  String getToday(){
+    DateTime today=DateTime.now();
+    return today.toString().substring(0,10);
+  }
+
+  //tomorrow
+  String getTomorrow(){
+    DateTime tomorrow=DateTime.now().add(Duration(days: 1));
+    return tomorrow.toString().substring(0,10);
+  }
+
+  // String dayAfterTomorrow(){
+  //
+  //   DateTime today=DateTime.now();
+  //
+  // }
 }
