@@ -3,12 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:task_managment_with_riverpod/common/utils/constants.dart';
+import 'package:task_managment_with_riverpod/common/utils/navigationUtils.dart';
 import 'package:task_managment_with_riverpod/common/widgets/appstyle.dart';
 import 'package:task_managment_with_riverpod/common/widgets/custom_text_field.dart';
 import 'package:task_managment_with_riverpod/common/widgets/expansion_tile.dart';
 import 'package:task_managment_with_riverpod/common/widgets/reusabletext.dart';
 import 'package:task_managment_with_riverpod/common/widgets/width_spacer.dart';
 import 'package:task_managment_with_riverpod/features/todo/controller/expansion_provider.dart';
+import 'package:task_managment_with_riverpod/features/todo/pages/add_todo.dart';
 import 'package:task_managment_with_riverpod/features/todo/widgets/todo_tile.dart';
 
 import '../../../common/widgets/height_spacer.dart';
@@ -44,9 +46,12 @@ class _HomePageState extends ConsumerState<HomePage> with TickerProviderStateMix
                     Container(
                       width: 25.w,
                       height: 25.w,
-                      decoration: BoxDecoration(color: AppConst.kLight, borderRadius: BorderRadius.all(Radius.circular(9))),
+                      decoration:
+                          BoxDecoration(color: AppConst.kLight, borderRadius: BorderRadius.all(Radius.circular(9))),
                       child: GestureDetector(
-                        onTap: () {},
+                        onTap: () {
+                          NavigationUtils.navigateToPage(context, AddTodo());
+                        },
                         child: Icon(
                           Icons.add,
                           color: AppConst.kBkDark,
@@ -100,12 +105,12 @@ class _HomePageState extends ConsumerState<HomePage> with TickerProviderStateMix
             ),
             HeightSpacer(height: 25),
             Container(
-              decoration:
-                  BoxDecoration(color: AppConst.kLight, borderRadius: BorderRadius.all(Radius.circular(AppConst.kRadius))),
+              decoration: BoxDecoration(
+                  color: AppConst.kLight, borderRadius: BorderRadius.all(Radius.circular(AppConst.kRadius))),
               child: TabBar(
                 indicatorSize: TabBarIndicatorSize.label,
-                indicator:
-                    BoxDecoration(color: AppConst.kGreyLight, borderRadius: BorderRadius.all(Radius.circular(AppConst.kRadius))),
+                indicator: BoxDecoration(
+                    color: AppConst.kGreyLight, borderRadius: BorderRadius.all(Radius.circular(AppConst.kRadius))),
                 controller: tabController,
                 labelPadding: EdgeInsets.zero,
                 labelColor: AppConst.kBlueLight,
@@ -174,7 +179,7 @@ class _HomePageState extends ConsumerState<HomePage> with TickerProviderStateMix
                 padding: EdgeInsets.only(right: 12.w),
                 child: ref.watch(expansionStateProvider)
                     ? Icon(
-                        AntDesign.circledown ,
+                        AntDesign.circledown,
                         color: AppConst.kLight,
                       )
                     : Icon(
@@ -204,24 +209,24 @@ class _HomePageState extends ConsumerState<HomePage> with TickerProviderStateMix
                   padding: EdgeInsets.only(right: 12.w),
                   child: ref.watch(expansionState0Provider)
                       ? Icon(
-                    AntDesign.circledown ,
-                    color: AppConst.kLight,
-                  )
+                          AntDesign.circledown,
+                          color: AppConst.kLight,
+                        )
                       : Icon(
-                    AntDesign.closecircleo,
-                    color: AppConst.kBlueLight,
-                  ),
+                          AntDesign.closecircleo,
+                          color: AppConst.kBlueLight,
+                        ),
                 ),
-              children: [
-                TodoTile(
-                  start: "03:00",
-                  end: "05:00",
-                  switcher: Switch(
-                    value: true,
-                    onChanged: (value) {},
-                  ),
-                )
-              ]),
+                children: [
+                  TodoTile(
+                    start: "03:00",
+                    end: "05:00",
+                    switcher: Switch(
+                      value: true,
+                      onChanged: (value) {},
+                    ),
+                  )
+                ]),
           ],
         ),
       )),
