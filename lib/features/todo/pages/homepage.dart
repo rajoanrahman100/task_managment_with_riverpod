@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -10,6 +11,7 @@ import 'package:task_managment_with_riverpod/common/widgets/expansion_tile.dart'
 import 'package:task_managment_with_riverpod/common/widgets/reusabletext.dart';
 import 'package:task_managment_with_riverpod/common/widgets/width_spacer.dart';
 import 'package:task_managment_with_riverpod/features/todo/controller/expansion_provider.dart';
+import 'package:task_managment_with_riverpod/features/todo/controller/todo/todo_provider.dart';
 import 'package:task_managment_with_riverpod/features/todo/pages/add_todo.dart';
 import 'package:task_managment_with_riverpod/features/todo/widgets/todo_tile.dart';
 
@@ -28,6 +30,9 @@ class _HomePageState extends ConsumerState<HomePage> with TickerProviderStateMix
 
   @override
   Widget build(BuildContext context) {
+
+    ref.watch(todoStateProvider.notifier).refresh();
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -148,18 +153,7 @@ class _HomePageState extends ConsumerState<HomePage> with TickerProviderStateMix
                   Container(
                     color: AppConst.kBkLight,
                     height: AppConst.kHeight * 0.3,
-                    child: ListView(
-                      children: [
-                        TodoTile(
-                          start: "03:00",
-                          end: "05:00",
-                          switcher: Switch(
-                            value: true,
-                            onChanged: (value) {},
-                          ),
-                        )
-                      ],
-                    ),
+                    child: TodayTask(),
                   ),
                   Container(
                     color: AppConst.kBkLight,
@@ -231,5 +225,29 @@ class _HomePageState extends ConsumerState<HomePage> with TickerProviderStateMix
         ),
       )),
     );
+  }
+}
+
+class TodayTask extends ConsumerWidget {
+  const TodayTask({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context,WidgetRef ref) {
+    var listData=ref.read(todoStateProvider);
+    var today=ref.read(todoStateProvider.notifier).getToday();
+    var todaysList=listData.where((element) => element.isCompleted==0&&element.date!.contains(today)).toList();
+
+    return ListView.builder(itemCount: todaysList.length,itemBuilder: (_,index){
+      final data=todaysList[index];
+      return TodoTile(
+        title: data.title,
+        description: data.desc,
+        start: data.startTime,
+        end: data.endTime,
+        color: AppConst.kGreen,
+      );
+    });
   }
 }

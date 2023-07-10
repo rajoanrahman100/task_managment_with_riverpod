@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:task_managment_with_riverpod/common/models/task_model.dart';
 import 'package:task_managment_with_riverpod/common/utils/constants.dart';
 import 'package:task_managment_with_riverpod/common/widgets/appstyle.dart';
 import 'package:task_managment_with_riverpod/common/widgets/custom_outline_btn.dart';
@@ -8,6 +9,7 @@ import 'package:task_managment_with_riverpod/common/widgets/custom_text_field.da
 import 'package:task_managment_with_riverpod/common/widgets/height_spacer.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart' as picker;
 import 'package:task_managment_with_riverpod/features/todo/controller/dates_provider.dart';
+import 'package:task_managment_with_riverpod/features/todo/controller/todo/todo_provider.dart';
 
 class AddTodo extends ConsumerStatefulWidget {
   const AddTodo({super.key});
@@ -54,16 +56,15 @@ class _AddTodoState extends ConsumerState<AddTodo> {
                     showTitleActions: true,
                     minTime: DateTime(2018, 12, 12),
                     maxTime: DateTime(2030, 12, 12),
-                    theme: picker.DatePickerTheme(doneStyle: TextStyle(color: AppConst.kGreen, fontSize: 16)),
-                    onConfirm: (date) {
+                    theme: picker.DatePickerTheme(doneStyle: TextStyle(color: AppConst.kGreen, fontSize: 16)), onConfirm: (date) {
                   debugPrint('confirm $date');
                   ref.read(dateStateProvider.notifier).setDate(date.toString());
                 }, currentTime: DateTime.now(), locale: picker.LocaleType.en);
               },
               width: AppConst.kWidth,
               height: 52.h,
-              color1: AppConst.kLight,
-              color2: AppConst.kBlueLight,
+              color1: AppConst.kBlueLight,
+              color2: AppConst.kLight,
               text: scheduleDate == "" ? "Set Date" : scheduleDate.toString().substring(0, 10),
             ),
             HeightSpacer(height: 20),
@@ -79,8 +80,8 @@ class _AddTodoState extends ConsumerState<AddTodo> {
                   },
                   width: AppConst.kWidth * 0.4,
                   height: 52.h,
-                  color1: AppConst.kLight,
-                  color2: AppConst.kBlueLight,
+                  color1: AppConst.kBlueLight,
+                  color2: AppConst.kLight,
                   text: startTime == "" ? "Start Time" : startTime.toString().substring(10, 16),
                 ),
                 CustomOutlineBtn(
@@ -92,19 +93,42 @@ class _AddTodoState extends ConsumerState<AddTodo> {
                   },
                   width: AppConst.kWidth * 0.4,
                   height: 52.h,
-                  color1: AppConst.kLight,
-                  color2: AppConst.kBlueLight,
+                  color1: AppConst.kBlueLight,
+                  color2: AppConst.kLight,
                   text: finishTime == "" ? "End Time" : finishTime.toString().substring(10, 16),
                 ),
               ],
             ),
             HeightSpacer(height: 20),
             CustomOutlineBtn(
-              onTap: () {},
+              onTap: () {
+                if (titleController.text.isNotEmpty &&
+                    descController.text.isNotEmpty &&
+                    scheduleDate.isNotEmpty &&
+                    startTime.isNotEmpty &&
+                    finishTime.isNotEmpty) {
+                  Task task = Task(
+                      title: titleController.text,
+                      desc: descController.text,
+                      isCompleted: 0,
+                      date: scheduleDate,
+                      startTime: startTime.substring(10, 16),
+                      endTime: finishTime.substring(10, 16),
+                      remind: 0,
+                      repeat: "yes");
+                  ref.read(todoStateProvider.notifier).addItem(task);
+                  ref.read(dateStateProvider.notifier).setDate("");
+                  ref.read(finishTimeStateProvider.notifier).setFinishTime("");
+                  ref.read(startTimeStateProvider.notifier).setStartTime("");
+                  Navigator.of(context).pop();
+                } else {
+                  debugPrint("Failed to add task");
+                }
+              },
               width: AppConst.kWidth * 0.4,
               height: 52.h,
-              color1: AppConst.kLight,
-              color2: AppConst.kGreen,
+              color1: AppConst.kGreen,
+              color2: AppConst.kLight,
               text: "Submit",
             ),
           ],
