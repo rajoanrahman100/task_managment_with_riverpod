@@ -6,6 +6,8 @@ import 'package:task_managment_with_riverpod/common/widgets/appstyle.dart';
 import 'package:task_managment_with_riverpod/common/widgets/custom_outline_btn.dart';
 import 'package:task_managment_with_riverpod/common/widgets/custom_text_field.dart';
 import 'package:task_managment_with_riverpod/common/widgets/height_spacer.dart';
+import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart' as picker;
+import 'package:task_managment_with_riverpod/features/todo/controller/dates_provider.dart';
 
 class AddTodo extends ConsumerStatefulWidget {
   const AddTodo({super.key});
@@ -20,6 +22,10 @@ class _AddTodoState extends ConsumerState<AddTodo> {
 
   @override
   Widget build(BuildContext context) {
+    var scheduleDate = ref.watch(dateStateProvider);
+    var startTime = ref.watch(startTimeStateProvider);
+    var finishTime = ref.watch(finishTimeStateProvider);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -43,39 +49,58 @@ class _AddTodoState extends ConsumerState<AddTodo> {
             ),
             HeightSpacer(height: 20),
             CustomOutlineBtn(
-              onTap: (){},
+              onTap: () {
+                picker.DatePicker.showDatePicker(context,
+                    showTitleActions: true,
+                    minTime: DateTime(2018, 12, 12),
+                    maxTime: DateTime(2030, 12, 12),
+                    theme: picker.DatePickerTheme(doneStyle: TextStyle(color: AppConst.kGreen, fontSize: 16)),
+                    onConfirm: (date) {
+                  debugPrint('confirm $date');
+                  ref.read(dateStateProvider.notifier).setDate(date.toString());
+                }, currentTime: DateTime.now(), locale: picker.LocaleType.en);
+              },
               width: AppConst.kWidth,
               height: 52.h,
               color1: AppConst.kLight,
               color2: AppConst.kBlueLight,
-              text: "Set Date",
+              text: scheduleDate == "" ? "Set Date" : scheduleDate.toString().substring(0, 10),
             ),
             HeightSpacer(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 CustomOutlineBtn(
-                  onTap: (){},
+                  onTap: () {
+                    picker.DatePicker.showDateTimePicker(context, showTitleActions: true, onConfirm: (date) {
+                      debugPrint('confirm $date');
+                      ref.read(startTimeStateProvider.notifier).setStartTime(date.toString());
+                    }, locale: picker.LocaleType.en);
+                  },
                   width: AppConst.kWidth * 0.4,
                   height: 52.h,
                   color1: AppConst.kLight,
                   color2: AppConst.kBlueLight,
-                  text: "Start Time",
+                  text: startTime == "" ? "Start Time" : startTime.toString().substring(10, 16),
                 ),
                 CustomOutlineBtn(
-                  onTap: (){},
+                  onTap: () {
+                    picker.DatePicker.showDateTimePicker(context, showTitleActions: true, onConfirm: (date) {
+                      debugPrint('confirm $date');
+                      ref.read(finishTimeStateProvider.notifier).setFinishTime(date.toString());
+                    }, locale: picker.LocaleType.en);
+                  },
                   width: AppConst.kWidth * 0.4,
                   height: 52.h,
                   color1: AppConst.kLight,
                   color2: AppConst.kBlueLight,
-                  text: "End Time",
+                  text: finishTime == "" ? "End Time" : finishTime.toString().substring(10, 16),
                 ),
               ],
             ),
             HeightSpacer(height: 20),
-
             CustomOutlineBtn(
-              onTap: (){},
+              onTap: () {},
               width: AppConst.kWidth * 0.4,
               height: 52.h,
               color1: AppConst.kLight,
