@@ -5,6 +5,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:task_managment_with_riverpod/common/utils/constants.dart';
 import 'package:task_managment_with_riverpod/features/todo/pages/homepage.dart';
 
+//flutter pub run build_runner watch
+
 void main() {
   runApp(ProviderScope(child: const MyApp()));
 }
