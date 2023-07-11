@@ -6,8 +6,10 @@ import 'package:task_managment_with_riverpod/features/todo/controller/todo/todo_
 import 'package:task_managment_with_riverpod/features/todo/widgets/todo_tile.dart';
 
 import '../../../common/utils/constants.dart';
+import '../../../common/utils/navigationUtils.dart';
 import '../../../common/widgets/expansion_tile.dart';
 import '../controller/expansion_provider.dart';
+import '../pages/edit_todo.dart';
 
 class DayAfterTomorrowList extends ConsumerWidget {
   const DayAfterTomorrowList({super.key});
@@ -52,7 +54,11 @@ class DayAfterTomorrowList extends ConsumerWidget {
               ref.read(todoStateProvider.notifier).deleteTodo(todo.id ?? 0);
             },
             edit: GestureDetector(
-              onTap: () {},
+              onTap: () {
+                titles=todo.title.toString();
+                desc=todo.desc.toString();
+                NavigationUtils.navigateToPage(context, EditTodo(id:todo.id ?? 0));
+              },
               child: Icon(MaterialCommunityIcons.circle_edit_outline),
             ),
             switcher: SizedBox.shrink(),
