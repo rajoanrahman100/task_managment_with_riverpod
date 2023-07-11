@@ -67,7 +67,7 @@ class DBHelper {
       "title": title,
       "desc": desc,
       "date": date,
-      "isVerified": isCompleted,
+      "isCompleted": isCompleted,
       "startTime": startTime,
       "endTime": endTime
     };
