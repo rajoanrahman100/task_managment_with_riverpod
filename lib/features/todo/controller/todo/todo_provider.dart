@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:task_managment_with_riverpod/common/helpers/db_helper.dart';
+import 'package:task_managment_with_riverpod/common/utils/constants.dart';
 
 import '../../../../common/models/task_model.dart';
 
@@ -59,18 +62,25 @@ class TodoState extends _$TodoState {
     List<String> dates = [];
     for (int i = 0; i < 3; i++) {
       DateTime dateTime = oneMonthAgo.add(Duration(days: i));
-      dates.add(dateTime.toString().substring(0,10));
+      dates.add(dateTime.toString().substring(0, 10));
     }
     return dates;
   }
 
-  bool getStatus(Task task){
+  bool getStatus(Task task) {
     bool? isCompleted;
-    if(task.isCompleted==0){
-      isCompleted=false;
-    }else{
-      isCompleted=true;
+    if (task.isCompleted == 0) {
+      isCompleted = false;
+    } else {
+      isCompleted = true;
     }
     return isCompleted;
+  }
+
+  //dynamic color
+  dynamic getRandomColor() {
+    Random random = Random();
+    int randomIndex = random.nextInt(colors.length);
+    return colors[randomIndex];
   }
 }

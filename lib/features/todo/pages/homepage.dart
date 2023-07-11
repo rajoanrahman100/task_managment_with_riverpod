@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -14,8 +13,10 @@ import 'package:task_managment_with_riverpod/features/todo/controller/expansion_
 import 'package:task_managment_with_riverpod/features/todo/controller/todo/todo_provider.dart';
 import 'package:task_managment_with_riverpod/features/todo/pages/add_todo.dart';
 import 'package:task_managment_with_riverpod/features/todo/widgets/todo_tile.dart';
+import 'package:task_managment_with_riverpod/features/todo/widgets/tomorrow_list.dart';
 
 import '../../../common/widgets/height_spacer.dart';
+import '../widgets/today_task.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -30,7 +31,6 @@ class _HomePageState extends ConsumerState<HomePage> with TickerProviderStateMix
 
   @override
   Widget build(BuildContext context) {
-
     ref.watch(todoStateProvider.notifier).refresh();
 
     return Scaffold(
@@ -51,8 +51,7 @@ class _HomePageState extends ConsumerState<HomePage> with TickerProviderStateMix
                     Container(
                       width: 25.w,
                       height: 25.w,
-                      decoration:
-                          BoxDecoration(color: AppConst.kLight, borderRadius: BorderRadius.all(Radius.circular(9))),
+                      decoration: BoxDecoration(color: AppConst.kLight, borderRadius: BorderRadius.all(Radius.circular(9))),
                       child: GestureDetector(
                         onTap: () {
                           NavigationUtils.navigateToPage(context, AddTodo());
@@ -110,12 +109,12 @@ class _HomePageState extends ConsumerState<HomePage> with TickerProviderStateMix
             ),
             HeightSpacer(height: 25),
             Container(
-              decoration: BoxDecoration(
-                  color: AppConst.kLight, borderRadius: BorderRadius.all(Radius.circular(AppConst.kRadius))),
+              decoration:
+                  BoxDecoration(color: AppConst.kLight, borderRadius: BorderRadius.all(Radius.circular(AppConst.kRadius))),
               child: TabBar(
                 indicatorSize: TabBarIndicatorSize.label,
-                indicator: BoxDecoration(
-                    color: AppConst.kGreyLight, borderRadius: BorderRadius.all(Radius.circular(AppConst.kRadius))),
+                indicator:
+                    BoxDecoration(color: AppConst.kGreyLight, borderRadius: BorderRadius.all(Radius.circular(AppConst.kRadius))),
                 controller: tabController,
                 labelPadding: EdgeInsets.zero,
                 labelColor: AppConst.kBlueLight,
@@ -163,35 +162,7 @@ class _HomePageState extends ConsumerState<HomePage> with TickerProviderStateMix
               ),
             ),
             HeightSpacer(height: 20),
-            ExpansionTileWidget(
-              text: "Tomorrow's Task",
-              text2: "Day after tomorrow task",
-              onExpansionChanged: (bool expanded) {
-                ref.read(expansionStateProvider.notifier).setStart(!expanded);
-              },
-              trailing: Padding(
-                padding: EdgeInsets.only(right: 12.w),
-                child: ref.watch(expansionStateProvider)
-                    ? Icon(
-                        AntDesign.circledown,
-                        color: AppConst.kLight,
-                      )
-                    : Icon(
-                        AntDesign.closecircleo,
-                        color: AppConst.kBlueLight,
-                      ),
-              ),
-              children: [
-                TodoTile(
-                  start: "03:00",
-                  end: "05:00",
-                  switcher: Switch(
-                    value: true,
-                    onChanged: (value) {},
-                  ),
-                )
-              ],
-            ),
+            TomorrowList(),
             HeightSpacer(height: 20),
             ExpansionTileWidget(
                 text: DateTime.now().add(Duration(days: 2)).toString().substring(5, 10),
@@ -225,29 +196,5 @@ class _HomePageState extends ConsumerState<HomePage> with TickerProviderStateMix
         ),
       )),
     );
-  }
-}
-
-class TodayTask extends ConsumerWidget {
-  const TodayTask({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context,WidgetRef ref) {
-    var listData=ref.read(todoStateProvider);
-    var today=ref.read(todoStateProvider.notifier).getToday();
-    var todaysList=listData.where((element) => element.isCompleted==0&&element.date!.contains(today)).toList();
-
-    return ListView.builder(itemCount: todaysList.length,itemBuilder: (_,index){
-      final data=todaysList[index];
-      return TodoTile(
-        title: data.title,
-        description: data.desc,
-        start: data.startTime,
-        end: data.endTime,
-        color: AppConst.kGreen,
-      );
-    });
   }
 }
