@@ -1,11 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:task_managment_with_riverpod/common/helpers/db_helper.dart';
 import 'package:task_managment_with_riverpod/common/routes/routes.dart';
 import 'package:task_managment_with_riverpod/common/widgets/showDialog.dart';
-import 'package:task_managment_with_riverpod/features/todo/pages/homepage.dart';
 
-import '../../../common/utils/navigationUtils.dart';
+
+final authRepositoryProvider=Provider((ref){
+  return AuthRepository(auth: FirebaseAuth.instance);
+});
 
 class AuthRepository {
   final FirebaseAuth auth;
