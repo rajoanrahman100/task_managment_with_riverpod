@@ -5,8 +5,7 @@ import 'package:task_managment_with_riverpod/common/helpers/db_helper.dart';
 import 'package:task_managment_with_riverpod/common/routes/routes.dart';
 import 'package:task_managment_with_riverpod/common/widgets/showDialog.dart';
 
-
-final authRepositoryProvider=Provider((ref){
+final authRepositoryProvider = Provider((ref) {
   return AuthRepository(auth: FirebaseAuth.instance);
 });
 
@@ -19,13 +18,17 @@ class AuthRepository {
       {required BuildContext context, required String smsCodeID, required String smsCode, required bool mounted}) async {
     try {
       final credential = PhoneAuthProvider.credential(verificationId: smsCodeID, smsCode: smsCode);
+
       await auth.signInWithCredential(credential);
+
       if (!mounted) {
         return;
       }
+
       Navigator.of(context).pushNamedAndRemoveUntil(Routes.home, (Route<dynamic> route) => false);
     } on FirebaseAuth catch (e) {
-      print("Error ${e.toString()}");
+      debugPrint("Error ${e.toString()}");
+
       showAlertDialog(context: context, message: e.toString());
     }
   }
@@ -42,16 +45,12 @@ class AuthRepository {
           },
           codeSent: (smsCodeId, resendCodeId) {
             DBHelper.createUser(1);
-            Navigator.of(context).pushNamedAndRemoveUntil(Routes.home, (Route<dynamic> route) => false,arguments: {
-              'phone':phone,'smsCodeId':smsCodeId
-            });
+            Navigator.of(context).pushNamedAndRemoveUntil(Routes.home, (Route<dynamic> route) => false,
+                arguments: {'phone': phone, 'smsCodeId': smsCodeId});
           },
-          codeAutoRetrievalTimeout: (String smsCodeId) {
-
-          });
-
+          codeAutoRetrievalTimeout: (String smsCodeId) {});
     } on FirebaseAuth catch (e) {
-      print("Error ${e.toString()}");
+      debugPrint("Error ${e.toString()}");
       showAlertDialog(context: context, message: e.toString());
     }
   }
