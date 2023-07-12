@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "811793252109",
+    "project_id": "taskmanagment-f34b8",
+    "storage_bucket": "taskmanagment-f34b8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:811793252109:android:b18152158802e525b2ba44",
+        "android_client_info": {
+          "package_name": "com.example.task_managment_with_riverpod"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "811793252109-ri5b9907713p10ma7t9771nbej133fla.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDqNF5qSyTAuGcqsB7kUMH_2Qzxgz_5wuc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "811793252109-ri5b9907713p10ma7t9771nbej133fla.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

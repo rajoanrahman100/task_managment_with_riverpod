@@ -7,7 +7,10 @@ import 'package:task_managment_with_riverpod/common/widgets/height_spacer.dart';
 import 'package:task_managment_with_riverpod/common/widgets/reusabletext.dart';
 
 class OtpPage extends StatelessWidget {
-  const OtpPage({Key? key}) : super(key: key);
+  const OtpPage({super.key , required this.smsCodeId, required this.phone});
+
+  final String smsCodeId;
+  final String phone;
 
   @override
   Widget build(BuildContext context) {
