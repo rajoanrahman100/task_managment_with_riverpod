@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
+import 'package:notification_permissions/notification_permissions.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:task_managment_with_riverpod/common/utils/constants.dart';
 import 'package:task_managment_with_riverpod/common/utils/navigationUtils.dart';
+import 'package:task_managment_with_riverpod/common/utils/notification_permission_helper.dart';
 import 'package:task_managment_with_riverpod/common/widgets/appstyle.dart';
 import 'package:task_managment_with_riverpod/common/widgets/custom_text_field.dart';
+import 'package:task_managment_with_riverpod/common/widgets/notification_permission_dialog.dart';
 import 'package:task_managment_with_riverpod/common/widgets/reusabletext.dart';
 import 'package:task_managment_with_riverpod/common/widgets/width_spacer.dart';
 import 'package:task_managment_with_riverpod/features/todo/controller/todo/todo_provider.dart';
@@ -29,6 +33,27 @@ class _HomePageState extends ConsumerState<HomePage> with TickerProviderStateMix
   late final TabController tabController = TabController(length: 2, vsync: this);
 
   @override
+  void initState() {
+    // TODO: implement initState
+    NotificationPermissionHelper.getCheckNotificationPermStatus().then((value) {
+      if (value != "granted") {
+        showNotificationPermissionDialog(context);
+      }
+    });
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      NotificationPermissionHelper.getCheckNotificationPermStatus().then((value) {
+        if (value != "granted") {
+          showNotificationPermissionDialog(context);
+        }
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     ref.watch(todoStateProvider.notifier).refresh();
 
@@ -50,7 +75,8 @@ class _HomePageState extends ConsumerState<HomePage> with TickerProviderStateMix
                     Container(
                       width: 25.w,
                       height: 25.w,
-                      decoration: BoxDecoration(color: AppConst.kLight, borderRadius: BorderRadius.all(Radius.circular(9))),
+                      decoration:
+                          BoxDecoration(color: AppConst.kLight, borderRadius: BorderRadius.all(Radius.circular(9))),
                       child: GestureDetector(
                         onTap: () {
                           NavigationUtils.navigateToPage(context, AddTodo());
@@ -108,12 +134,12 @@ class _HomePageState extends ConsumerState<HomePage> with TickerProviderStateMix
             ),
             HeightSpacer(height: 25),
             Container(
-              decoration:
-                  BoxDecoration(color: AppConst.kLight, borderRadius: BorderRadius.all(Radius.circular(AppConst.kRadius))),
+              decoration: BoxDecoration(
+                  color: AppConst.kLight, borderRadius: BorderRadius.all(Radius.circular(AppConst.kRadius))),
               child: TabBar(
                 indicatorSize: TabBarIndicatorSize.label,
-                indicator:
-                    BoxDecoration(color: AppConst.kGreyLight, borderRadius: BorderRadius.all(Radius.circular(AppConst.kRadius))),
+                indicator: BoxDecoration(
+                    color: AppConst.kGreyLight, borderRadius: BorderRadius.all(Radius.circular(AppConst.kRadius))),
                 controller: tabController,
                 labelPadding: EdgeInsets.zero,
                 labelColor: AppConst.kBlueLight,
