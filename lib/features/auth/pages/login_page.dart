@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,6 +9,9 @@ import 'package:task_managment_with_riverpod/common/widgets/appstyle.dart';
 import 'package:task_managment_with_riverpod/common/widgets/custom_outline_btn.dart';
 import 'package:task_managment_with_riverpod/common/widgets/height_spacer.dart';
 import 'package:task_managment_with_riverpod/common/widgets/reusabletext.dart';
+import 'package:task_managment_with_riverpod/common/widgets/showDialog.dart';
+import 'package:task_managment_with_riverpod/features/auth/controller/auth_controller.dart';
+import 'package:task_managment_with_riverpod/features/auth/controller/code_provider.dart';
 
 import '../../../common/widgets/custom_text_field.dart';
 import 'otp_page.dart';
@@ -31,6 +36,7 @@ class LoginPageState extends ConsumerState<LoginPage> {
       displayName: "Bangladesh",
       displayNameNoCountryCode: "BD",
       e164Key: "");
+
 
   @override
   void initState() {
@@ -76,14 +82,18 @@ class LoginPageState extends ConsumerState<LoginPage> {
                       showCountryPicker(
                           context: context,
                           countryListTheme: CountryListThemeData(
-                              backgroundColor: AppConst.kLight,
+                              backgroundColor: AppConst.kGreyLight,
                               bottomSheetHeight: AppConst.kHeight * 0.6,
                               borderRadius: BorderRadius.only(
                                 topLeft: Radius.circular(AppConst.kRadius),
                                 topRight: Radius.circular(AppConst.kRadius),
                               )),
                           onSelect: (code) {
-                            setState(() {});
+                            setState(() {
+                              country=code;
+                            });
+                            ref.read(codeStateProvider.notifier).setStart(code.phoneCode);
+                            log("Country Code ${ref.read(codeStateProvider)}");
                           });
                     },
                     child: ReusableText(
@@ -106,13 +116,20 @@ class LoginPageState extends ConsumerState<LoginPage> {
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: CustomOutlineBtn(
                 onTap: () {
-                  Navigator.push(
+                  if (phoneController.text.isEmpty) {
+                    showAlertDialog(context: context, message: "Please enter phone number");
+                  } else if (phoneController.text.length < 8) {
+                     showAlertDialog(context: context, message: "Your number is too short");
+                  } else {
+                    ref.read(authController).sendSms(context: context, phone: '+${country.phoneCode}${phoneController.text}');
+                  }
+                  /*Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => OtpPage(
                                 smsCodeId: '',
                                 phone: '',
-                              )));
+                              )));*/
                 },
                 width: AppConst.kWidth * 0.9,
                 height: AppConst.kHeight * 0.07,
