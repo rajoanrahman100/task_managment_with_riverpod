@@ -1,6 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.task_managment_with_riverpod">
-   <application
+
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <application
         android:label="task_managment_with_riverpod"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
