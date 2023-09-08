@@ -4,7 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:task_managment_with_riverpod/common/models/user_model.dart';
+import 'package:task_managment_with_riverpod/common/routes/routes.dart';
 import 'package:task_managment_with_riverpod/common/utils/constants.dart';
+import 'package:task_managment_with_riverpod/features/auth/controller/user_controller.dart';
+import 'package:task_managment_with_riverpod/features/onboarding/pages/onboarding.dart';
 import 'package:task_managment_with_riverpod/features/todo/pages/homepage.dart';
 
 import 'notification_permission.dart';
@@ -17,7 +21,7 @@ void main() async{
   runApp(ProviderScope(child: const MyApp()));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   static final defaultLightColorScheme = ColorScheme.fromSwatch(primarySwatch: Colors.blue);
@@ -26,7 +30,12 @@ class MyApp extends StatelessWidget {
 
   // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context,WidgetRef ref) {
+
+    ref.read(userProvider.notifier).refresh(); ///Fetching the user list from local db
+
+    List<UserModel> users=ref.watch(userProvider);
+
     return ScreenUtilInit(
         useInheritedMediaQuery: true,
         designSize: Size(375, 825),
@@ -46,7 +55,8 @@ class MyApp extends StatelessWidget {
                 useMaterial3: true,
               ),
               themeMode: ThemeMode.dark,
-              home: HomePage(),
+              onGenerateRoute: Routes.onGenerateRoute,
+              home: users.isEmpty?OnBoarding():HomePage(),
             );
           });
         });
